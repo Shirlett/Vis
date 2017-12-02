@@ -1,0 +1,12 @@
+name: worldinternetusage
+title: WorldInternetUsage
+username:
+account: shirlett
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 242832
+bundleId: 1109805
+url: https://shirlett.shinyapps.io/worldinternetusage/
+when: 1512171192.52008
+asMultiple: FALSE
+asStatic: FALSE

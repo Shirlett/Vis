@@ -12,8 +12,11 @@ library(broom) #for tidy function
 library(stringr)
 library(ggthemes) #additional color themes
 library(shinycssloaders) #to add spinner to plot during processing of updates
+library(tidyverse)
+library(forcats) #used to manipulate factors for ordering, lumping etc
 
 server <- function(input, output, session) {
+  
   #uses the continuous coloring from Color Brewer for leaflet map
   greens = colorNumeric("Greens", domain = NULL)
   
@@ -61,7 +64,7 @@ server <- function(input, output, session) {
   
   #Instructions to user
   output$mytext <- renderText({
-    paste("Click up to 10 Circle Markers on the map below to see more details for the selected countries")
+    paste("Click up to 6 Circle Markers on the map below to see more details for the selected countries")
   })
   
   #Have a plot that initializes with Canada
@@ -103,7 +106,7 @@ server <- function(input, output, session) {
     {
     click <- input$mymap_marker_click
     p$Clicks <- c(p$Clicks, click$id)
-    if ((length(p$Clicks) > 4)) {
+    if ((length(p$Clicks) > 6)) {
        p$Clicks <- NULL
         output$toomany <- renderText({
           "Sorry, you have selected too many countries, please start again!"
@@ -131,6 +134,33 @@ server <- function(input, output, session) {
   })
     
   
+  
+
+  #Get median values for number of Internet Users and Gross National Income
+  Internet_for_factor <- reactive({
+   data_factor <- Internet_Use %>%
+    dplyr::select(Year, Internet_Users_per_100, input$factor) %>%
+    group_by(Year) %>%
+    dplyr::summarise(Med_Internet_Users=median(Internet_Users_per_100), Median_of_factor=median(get(input$factor), na.rm = TRUE))
+  })
+  
+   
+  #Linear Regression
+  output$Factor_Plot <- renderPlot({
+    ggplot(Internet_for_factor(), aes(Median_of_factor, Med_Internet_Users)) +
+    geom_point(shape=1) +
+    geom_smooth(method=lm) +
+    labs(
+      subtitle="World Internet Usage vs Selected Factor, 2008-15",
+      y = "Median Number of Internet Users per 100 inhabitants per Year", x= paste("Median ", input$factor)) +
+    theme(plot.subtitle = element_text(size = 15)) 
+    })
+  
+  #Get estimate of slopes, intercepts for linear model
+  output$facfit <- renderTable({
+    slopes <- tidy(lm(Med_Internet_Users ~ Median_of_factor, data=Internet_for_factor()))
+  })
+  
   output$Internet_Factor <- renderPlot({
     Internet_Use %>%
       filter(id %in% p$Clicks) %>%
@@ -138,52 +168,17 @@ server <- function(input, output, session) {
       rbind(world_Avg) %>%
       mutate(Internet_Users_per_100 = as.character(round(Internet_Users_per_100, 2))) %>%
       filter(Years == 2015) %>%
+      mutate(Country = fct_reorder(factor(Country), get(input$factor)), max()) %>%
       ggplot(aes_string( y = input$factor,  width = 0.3)) +
       geom_bar(aes(x = Country), fill= "green", stat = "identity") +
       labs(x = NULL) +
-      ggtitle(paste(input$factor, ",2015")) +
+      ggtitle(paste0(input$factor, ",2015")) +
       labs(y = input$factor, x= NULL) +
       theme(legend.position="none") +
       coord_flip() +
       geom_text(aes(x = Country, label=paste0("Usage: ", Internet_Users_per_100)),vjust="inward",angle=0,hjust="inward")
-
-  })
-
-  #Get median values for number of Internet Users and Gross National Income
-  Internet_for_factor <- reactive({
-   data_factor <- Internet_Use %>%
-    dplyr::select(Year, Internet_Users_per_100, input$factor) %>%
-    group_by(Year) %>%
-    dplyr::summarise(Med_Internet_Users=median(Internet_Users_per_100), Med_factor=median(get(input$factor), na.rm = TRUE))
-  })
-  
-   #Get estimate of slopes, intercepts for linear model
-   facfit <- reactive({
-    slopes <- tidy(lm(Med_Internet_Users ~ Med_factor, data=Internet_for_factor()))
-    print(slopes)
-             })
     
-    print(facfit)
-  
-  #Capture p-value to pass to graph
-   pfac <- reactive({
-   pval <- toString(round(facfit[2,5], digits=5))
-          })
-   print(pfac)
-   
-  #Linear Regression
-  output$Factor_Plot <- renderPlot({
-    ggplot(Internet_for_factor(), aes(Med_factor, Med_Internet_Users)) +
-    geom_point(shape=1) +
-    geom_smooth(method=lm) +
-    labs(
-      subtitle="World Internet Usage as influenced by Selected Factor",
-      y = "Median Number of Internet Users per 100 inhabitants per Year", x= paste("Median ", input$factor)) +
-    theme(plot.subtitle = element_text(size = 15)) 
-    #annotate("text", x=10, y=10, label = paste("p-value=", pval), parse=F)
-    })
-  
- 
+  })
   
   #Create datatable with selected countries
   output$myTable <- DT::renderDataTable({
