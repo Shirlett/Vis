@@ -5,8 +5,8 @@ account: shirlett
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 242832
-bundleId: 1109805
+bundleId: 1128827
 url: https://shirlett.shinyapps.io/worldinternetusage/
-when: 1512171192.52008
+when: 1513028701.65821
 asMultiple: FALSE
 asStatic: FALSE

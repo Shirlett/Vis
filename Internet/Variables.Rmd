@@ -1,0 +1,23 @@
+---
+title: "Variable"
+author: "Shirlett"
+date: "December 6, 2017"
+output: html_document
+---
+
+
+| Variables        | Description                            | 
+|:-----------------|:---------------------------------------| 
+| Internet_Users:  | Usage per 100 inhabitants              |
+|       -          |            -                           |
+| Life_Exp:        | Median Life Expectancy                 |
+|       -          |            -                           |
+| National_Income: | Gross National Income per capita (000s)|
+|       -          |            -                           |
+| Schooling:       | % Completed Primary Education          | 
+|       -          |           -                            |
+| Unemployment:    | % Adult Unemployment                   |
+|       -          |         -                              |
+| Percent_urban:   | % Population in Urban Areas            | 
+|     -            |           -                            |
+| with_Electricity:| % with Access to Electricity           |

@@ -5,9 +5,48 @@ date: "December 1, 2017"
 output: html_document
 ---
 
+
 ## Introduction
-This application allows for basic analysis of Internet usage across the world from 2008 to 2015.
-It also allows you to review the potential factors that may affect the usage and compares the impact between countries.
+This application allows for basic analysis of Internet usage across the world from 2008 to 2014.
+It also allows you to review the potential factors that may affect the usage, and compares the impact between countries. Generally, its purpose is to help answer the following questions/issues:
+
+1. Internet use within geographic boundaries 
+2. Trends in Internet Usage and potential factors
+3. Comparison of social and economic factors in relation to the level of Internet Usage
+
 
 ## How to Use
-You can start with the general overview of the countries and their relative ranking in the world as shown under the plotview tab.
+You must allow the site to fully download before interacting with the elements on the page.
+
+### Overview Tab
+You can start with the general overview of the countries and their relative ranking in the world as shown under the Overview tab. 
+Given the size of the plot, it may be useful to adjust the range of Internet Usage using the slider. 
+![rangeslider](range.png)
+
+
+
+
+Then you can adjust the height to maximise visibility of all the countries.
+![heightslider](height.png)
+
+There is another layer of interactivity built into this plot and hovering over the plot causes a toolbar to appear in the top right-hand corner. 
+You can download your preferred view as a png file.
+
+![Toolbar](download.png)
+
+
+### Interactive Mapview Tab
+Interaction on this page is driven by the countries selected on the map. The depth of color and size serves as an indicator of the level of Internet Usage in each country. The application can only accomodate the analysis of up to **six(6)** countries. Exceeding this limit will cause all selections to disappear leaving only the default world average. 
+
+Scrolling down the page shows the relative positions of all selected countries for each socio-economic factor on a parallel coordinates plot. Hovering over the points allows you to see all the countries that may become hidden from view. You can also click on the legend to remove and readd countries in this plot.There were some countries that did not have any available data for some factors. This is indicated by gaps in the plot. 
+
+The next section allows some degree of regression analysis. The p-value in the table indicates the probability of obtaining the observed effect if there is no relationship between Internet Usage and the selected factor. This is based on the linear model of the entire dataset for all countries from 2008 to 2014. The typical cut-off for statistical significance is 0.05. Values below this cut-off are viewed as significant. T-values futher away from zero also indicate that there is evidence against the possibility that there is no relationship between Internet Usage and the selected factor. Next to the table is a drop-down menu to visualize the linear model for a specific factor. On the right of the linear model, there is an additional line chart that shows the trends for the selected factor in the countries under study.
+
+### Download Raw Data Tab
+All the data used in the interface is available in a downloadable table on the fourth tab. This also includes population figures where available.
+
+All raw data was sourced and can be accessed from the [UN Website](http://data.un.org/Explorer.aspx?d=SDGs&f=series%3aSL_TLF_UEM).
+
+
+## Caveats
+The application does not seek to assert any causal relationships between Internet Usage and any of the selected factors under study. It can serve only as a basis for further research to investigate the digital divide among various countries.

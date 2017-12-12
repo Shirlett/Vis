@@ -1,0 +1,108 @@
+---
+title: "Test"
+author: "Shirlett"
+date: "December 4, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(reshape2)
+library(tidyr)
+library(ggplot2)
+setwd("C:/Users/Shirlett/Documents/myrepositories/Vis/")
+Internet_Use <- read_csv("./Internet/All_Data.csv") %>%
+                  filter(Year %in% c(2008:2014))
+
+
+ internet_par <- Internet_Use %>%
+    group_by(Country) %>%
+    subset(Year == 2014) %>%
+   mutate(School_Compl_Rate = Primary_Compl_Rate) %>%
+   #mutate(Size_user = (round(Internet_Users_per_100, 2))/10) %>%
+    select(Country, Internet_Users_per_100, Percent_urban, Per_Access_Electricity, School_Compl_Rate, Median_Life_Exp, Per_Adult_Unemployment) %>%
+  filter(Country %in% c("Belarus", "Belize", "Bhutan", "Chile", "Ghana", "Latvia", "Peru", "Slovakia")) %>%
+   gather(Factor, measure,Internet_Users_per_100:Per_Adult_Unemployment) 
+ 
+ #%>%
+   #mutate(measure=factor(measure))
+  
+ 
+ 
+ 
+
+
+
+```
+
+
+```{r}
+# library(plotrix)
+# 
+# rownames(internet_par) <- c("Belarus", "Belize", "Bhutan", "Chile", "Ghana", "Latvia", "Peru", "Slovakia")
+# 
+# colnames(internet_par) <- c("urban", "Electricity", "Primary")
+# 
+# bumpchart(internet_par, col=rainbow(6))
+```
+
+```{r}
+# library(plotly)
+# 
+# p <- internet_par %>%
+#   plot_ly(type = 'parcoords',
+#           line = list(color = ~Country,
+#                       colorscale = list(c(0,'red'),c(0.5,'green'),c(1,'blue'))),
+#     
+#           line = list(color = c("blue", "red", "green" ,"yellow", "pink")), 
+#           dimensions = list(
+#             list(range = c(0, 100),
+#                  label = 'Percent Urban', values = ~Percent_urban),
+#             list(range = c(0, 100),
+#                  label = 'Percent w/ Electricity', values = ~Per_Access_Electricity),
+#             list(range = c(0, 100),
+#                  label = 'Percent w/ Primary School', values = ~Primary_Compl_Rate),
+#             list(range = c(0, 100),
+#                  label = 'Life Expectancy', values = ~Median_Life_Exp),
+#             list(range = c(0, 100),
+#                  label = 'Adult Unemployment', values = ~Per_Adult_Unemployment)
+#             )
+#           )
+# 
+# p
+
+
+```
+
+
+
+
+```{r fig.width=40}
+# library(MASS)
+# #data("internet_par")
+# #parcoord( internet_par[,2:6], col=rainbow(length(internet_par[,1])), var.label=TRUE)
+# parcoord(internet_par[,2:6], col=rainbow(6), var.label=TRUE)
+```
+```{r}
+#library(GGally)
+
+#ggparcoord(internet_par, columns = 2:6, groupColumn = 'Country', scale = #'globalminmax')
+
+```
+
+```{r fig.height=10, fig.width=15}
+
+
+ggplot(internet_par, aes(x = Factor, y = measure, group=Country)) +   
+  geom_line(aes(color = Country),
+            alpha = 1,
+            lineend = 'round', linejoin = 'round',size=~Internet_Users_per_100) + 
+  scale_y_continuous( expand = c(0.05, 0)) +
+  scale_size(breaks = 10, range = c(0, 100)) +
+  scale_color_brewer(palette="Set2") +
+  theme(axis.text.x = element_text(size=12, face="bold"))
+  
+```
+
