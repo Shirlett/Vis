@@ -39,7 +39,7 @@ theme = shinytheme("simplex"),
                 
                 mainPanel(
                   tags$h2(HTML("Internet Usage Across the World, 2014")),
-                  tags$h4(HTML("<strong>Click up to 6 Circle Markers on the map below to see more details for the selected countries</strong>")), 
+                  tags$h4(HTML("<strong>Double Click on up to 6 Circle Markers on the map below to see more details for the selected countries</strong>")), 
                   leafletOutput("mymap"),
                   p(em("Source:"),
                     a(href="http://data.un.org/Explorer.aspx?d=SDGs&f=series%3aSL_TLF_UEM", "UN dataset", target="_blank")),
